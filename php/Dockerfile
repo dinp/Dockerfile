@@ -45,9 +45,6 @@ RUN git clone https://github.com/allegro/php-protobuf \
     && make install \
     && popd
 
-ADD php.ini /opt/php/etc/
-ADD php-fpm.conf /opt/php/etc/
-
 RUN wget http://ftp.exim.llorien.org/pcre/pcre-8.32.tar.gz \
     && mkdir -p /usr/src/pcre-8.32 \
     && tar -zxvf pcre-8.32.tar.gz -C /usr/src/pcre-8.32 --strip-components=1 \
@@ -68,9 +65,28 @@ RUN wget http://nginx.org/download/nginx-1.4.6.tar.gz \
     && make install \
     && popd
 
-ADD nginx.conf /opt/nginx/conf/nginx.conf
+ADD . /opt/
+WORKDIR /opt
+
+RUN cp nginx.conf /opt/nginx/conf/nginx.conf \
+    && cp php.ini /opt/php/etc/ \
+    && cp php-fpm.conf /opt/php/etc/
+
+RUN tar zxvf scribed.tar.gz \
+    && chown -R root:root scribed \
+    && rm -f scribed.tar.gz
+
+RUN curl -SL 'https://bootstrap.pypa.io/get-pip.py' | python
+RUN pip install supervisor \
+    && echo_supervisord_conf > /etc/supervisord.conf \
+    && echo "[include]" >> /etc/supervisord.conf \
+    && echo "files = /etc/supervisord.d/*.conf" >> /etc/supervisord.conf \
+    && mkdir -p /etc/supervisord.d \
+    && cp nginxphp.conf scribed.conf /etc/supervisord.d/ \
+    && rm -f nginx.conf php.ini php-fpm.conf nginxphp.conf scribed.conf Dockerfile
 
 RUN mkdir /opt/app
+RUN mkdir /opt/logs
 ENV PHP_HOME /opt/php
 ENV NGINX_HOME /opt/nginx
 ENV PATH $PATH:$PHP_HOME/bin:$PHP_HOME/sbin:$NGINX_HOME/sbin
