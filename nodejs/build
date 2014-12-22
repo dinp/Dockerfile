@@ -1,9 +1,10 @@
 #! /bin/bash
 
 REGISTRY=registry.com:5000
+NAME=nodejs:base
 
 [[ -f scribed.tar.gz ]] && echo "scribed.tar.gz exists" || cp ../scribed.tar.gz .
-docker build -t nodejs:base .
-docker tag nodejs:base ${REGISTRY}/nodejs:base
-docker push ${REGISTRY}/nodejs:base
+docker build -t $NAME .
+docker tag $NAME ${REGISTRY}/$NAME
+docker push ${REGISTRY}/$NAME
 
