@@ -1,6 +1,6 @@
 #! /bin/bash
 
-REGISTRY=10.105.5.24:5000
+REGISTRY=registry.com:5000
 NAME=tomcat:7.0.56
 
 docker build -t $NAME .
