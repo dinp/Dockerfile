@@ -3,8 +3,7 @@ FROM centos:centos6
 RUN cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN yum -y install wget tar unzip gcc zlib zlib-devel openssl openssl-devel unzip
 
-RUN mkdir -p /opt/app
-RUN mkdir -p /opt/logs
+RUN mkdir -p /opt/app && mkdir -p /opt/logs
 
 ADD . /opt/
 WORKDIR /opt
