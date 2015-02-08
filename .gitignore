@@ -1,0 +1,5 @@
+/tmp
+*.log
+*.sw[op]
+/tomcat7/tomcat
+/tomcat7/jdk
